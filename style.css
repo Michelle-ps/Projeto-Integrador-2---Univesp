@@ -17,7 +17,7 @@ body {
   position: fixed;
   max-width: 300px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.8);
+  background: linear-gradient(135deg, #c65d31, #f6a600, #fef6e4, #4e3b30);
   padding: 15px;
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
