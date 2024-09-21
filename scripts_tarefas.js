@@ -134,4 +134,20 @@ $(document).ready(function () {
       }
     });
   });
+
+  // Use event delegation to handle dynamic content
+  $('#taskList').on('click', '.edit', function () {
+    var listItem = $(this).closest('li');
+    var textSpan = listItem.find('span').first();
+    var dateSpan = listItem.find('span').last();
+    
+  });
+
+  $('#taskList').on('click', '.delete', function () {
+    $(this).closest('li').remove();
+  });
+
+  $('#taskList').on('click', '.complete', function () {
+    $(this).closest('li').toggleClass('completed', this.checked);
+  });
 });
