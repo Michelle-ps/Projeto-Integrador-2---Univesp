@@ -54,15 +54,16 @@ h1 {
 }
 
 #addTaskBtn {
-  width: 70%;
-  padding: 10px;
-  margin-left: 35px;
+  width: 85%;
+  padding: 5px;
+  margin-left: 15px;
   margin-top: 15px;
-  background-color: #5cb85c;
-  color: white;
+  background-color: #4cae4c;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-bottom: 20px;
+
 }
 
 #addTaskBtn:hover {
@@ -207,6 +208,7 @@ button:hover {
 #toggleCompletedBtn {
   margin-bottom: 10px;
   margin-left: 38%;
+  margin-top: 15px;
   padding: 8px 16px;
   background-color: #28a745;
   color: white;
@@ -234,6 +236,8 @@ button:hover {
   border-color: #c3e6cb;
   color: #155724;
   margin-left: 38%;
+  margin-right: 3%;
+  margin-top: -5px;
 }
 
 #completedTasks li button {
