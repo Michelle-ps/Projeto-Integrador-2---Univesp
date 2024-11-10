@@ -1,16 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 body {
-  font-family:  "Atkinson Hyperlegible", sans-serif;
-  background: rgb(230, 215, 199);
-  background: radial-gradient(
-    circle,
-    rgba(230, 215, 199, 1) 40%,
-    rgba(246, 245, 241, 1) 66%
-    
-  );
-  margin: 0;
-  padding: 20px;
+  background-image: url(/img/pexels-ron-lach-9196726.jpg);
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.8); /* Adicione essa linha para deixar o papel de parede um pouco mais transparente */
+  background-blend-mode: multiply; /* Adicione essa linha para misturar a cor de fundo com a imagem de papel de parede */
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  
 }
 
 .todo-container {
@@ -32,9 +29,12 @@ body {
   flex-flow: wrap;
   display: grid;
   padding: 5px;
-  grid-template-columns: 1fr 1fr; /* Divide a área em duas colunas */
-  align-items: center; /* Alinha os itens flexíveis ao longo do eixo transversal */
-  gap: 20px; /* Espaço entre as colunas */
+  grid-template-columns: 1fr 1fr;
+  /* Divide a área em duas colunas */
+  align-items: center;
+  /* Alinha os itens flexíveis ao longo do eixo transversal */
+  gap: 20px;
+  /* Espaço entre as colunas */
 }
 
 
@@ -58,16 +58,16 @@ h1 {
   padding: 5px;
   margin-left: 15px;
   margin-top: 15px;
-  background-color: #4cae4c;
+  background-color: #BF7330;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   margin-bottom: 20px;
 
 }
 
 #addTaskBtn:hover {
-  background-color: #4cae4c;
+  background-color: #BF7330;
 }
 
 ul {
@@ -105,17 +105,21 @@ button {
 }
 
 button:hover {
-  background-color: red;
+  background-color: #F2AF5C;
 }
 
 button.edit,
-button.delete {
+button.delete,
+button.save {
   width: 80px;
   height: 30px;
   padding: 5px 10px;
   cursor: pointer;
   transition: color 0.3s ease;
   font-size: 12px;
+  border-radius: 6px;
+  margin: 4px;
+  /* Adicione essa linha para adicionar margem */
 }
 
 button.edit:hover {
@@ -123,7 +127,7 @@ button.edit:hover {
 }
 
 button.delete:hover {
-  color: #fff;
+  color: #f0ad4e;
 }
 
 .task-card {
@@ -139,16 +143,17 @@ button.delete:hover {
 }
 
 .task-card button {
-  background-color: #d9534f;
+  background-color: #F2AF5C;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   padding: 5px 10px;
 }
 
 .task-card button:hover {
-  background-color: #c9302c;
+  background-color: #F2AF5C;
+
 }
 
 .rodape {
@@ -161,7 +166,7 @@ button.delete:hover {
   text-align: end;
 }
 
- /* adicionei para o Dropdown das listas
+/* adicionei para o Dropdown das listas
 
 /* Estilos para a lista de tarefas */
 ul {
@@ -194,14 +199,14 @@ button {
   margin-left: 10px;
   padding: 5px 10px;
   border: none;
-  border-radius: 3px;
-  background-color: #007bff;
+  border-radius: 6px;
+  background-color: #F2AF5C;
   color: white;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #F2AF5C;
 }
 
 /* Estilo do botão de alternar visibilidade */
@@ -210,15 +215,15 @@ button:hover {
   margin-left: 38%;
   margin-top: 15px;
   padding: 8px 16px;
-  background-color: #28a745;
+  background-color: #BF7330;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
 #toggleCompletedBtn:hover {
-  background-color: #218838;
+  background-color: #BF7330;
 }
 
 /* Estilo da lista de tarefas concluídas */
@@ -234,16 +239,16 @@ button:hover {
 #completedTaskList li {
   background-color: #d4edda;
   border-color: #c3e6cb;
-  color: #155724;
+  color: #BF7330;
   margin-left: 38%;
   margin-right: 3%;
   margin-top: -5px;
 }
 
 #completedTasks li button {
-  background-color: #dc3545;
+  background-color: #BF7330;
 }
 
 #completedTasks li button:hover {
-  background-color: #c82333;
+  background-color: #BF7330;
 }
