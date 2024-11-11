@@ -1,0 +1,13 @@
+//npm init // inicia um projeto novo
+//criar um arquivo index.js
+//npm install mongoose
+//npm install express
+
+//npm install --save-dev nodemon  // reinicializa o express automaticamente
+
+//criar pasta models
+// npm install cors
+
+//npm install serve-handler
+
+// mongodb+srv://pi2:projeto2024@cluster0.tk6t0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

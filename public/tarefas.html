@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>&#x1F9E0; Agenda Psico</title>
+    <!--<link rel="stylesheet" href="http://localhost:3000/Projeto/public/tarefas.css" />-->
+    <link rel="icon" type="image/x-icon" href="/img/raposa.ico" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+
+  <body>
+    <!--<form method="post" action="/">
+      <ul id="messages"></ul>-->
+
+    
+      <div class="todo-container">
+        <h1>&#x1F4DD; Minhas tarefas</h1>
+
+
+
+        <input type="text" id="taskInput" name="taskInput" placeholder="Adicione uma tarefa..." />
+        <input type="date" id="dateInput" name="dateInput" />
+        <button id="addTaskBtn">Adicionar Tarefa</button>
+      </div>
+    <!--</form>-->
+
+    
+    
+   
+     <!--<div id="row" class="row">
+       <div id="taskList" class="task-list">
+        <div id="columnE" class="columnE">
+
+          
+        </div>
+        <div id="columnD" class="columnD">
+
+         
+        </div>
+      </div> 
+    </div>--> 
+       <!--<li><input type="checkbox">  </input><span>oi </span><span>teste</span></li>-->
+  
+
+    <div id="taskList" class="task-list"></div>
+    <button id="toggleCompletedBtn">Mostrar Tarefas Concluídas</button>
+    <div id="completedTasks" style="display: none">
+      <ul id="completedTaskList"></ul>
+    </div>
+    <div id="output"></div>
+  
+    <ul id="taskList"></ul>
+  
+
+
+
+    <dialog id="modal" class="modal">
+      <h1>&#x1F4DD; Minhas tarefas - excluir</h1>
+        <p>Tem certeza que quer excluir essa tarefa?</p>
+        <div id="botoesModal" class="botoes_modal">
+          <button id="cancelarBtn" onclick="modal.close()">Cancelar</button>
+          <button id="apagarBtn" >Confirmar</button>
+        </div>
+     
+    </dialog>
+    <dialog id="atualizarModal" class="atualizar_modal">
+      <h1>&#x1F4DD; Minhas tarefas - atualizar</h1>
+      <input type="text" id="taskInputModal" placeholder="Adicione uma tarefa..." />
+      <input type="date" id="dateInputModal" />
+      <div id="botoesModal" class="botoes_modal">
+        <button id="cancelarBtn" onclick="atualizarModal.close()">Cancelar</button>
+        <button id="atualizarBtn" >Atualizar</button>
+      </div>
+
+
+   
+  </dialog>
+
+  <dialog id="sucessoModal" class="sucesso_modal">
+    
+   
+       <!--<p>Tarefa atualizada com sucesso</p>--> 
+   <!--<div id="botoesModal" class="botoes_modal">
+      <button id="cancelarBtn" onclick="sucessoModal.close()">Cancelar</button>
+     
+    </div>-->
+ 
+</dialog>
+
+<dialog id="erroModal" class="atualizar_modal">
+  <h1>&#x1F4DD; Minhas tarefas - atualizar</h1>
+  <input type="text" id="taskInputModal" placeholder="Adicione uma tarefa..." />
+  <input type="date" id="dateInputModal" />
+  <div id="botoesModal" class="botoes_modal">
+    <button id="cancelarBtn" onclick="atualizarModal.close()">Cancelar</button>
+    <button id="atualizarBtn" >Atualizar</button>
+  </div>
+
+  
+
+
+  
+
+
+
+  
+
+</dialog>
+
+
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+
+ <!--<script src="/scripts_tarefas.js"></script>--> 
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+  <script type="text/javascript">
+    // const ws = new WebSocket(`ws://${window.document.location.host}`);
+    const ws = new WebSocket(`http://localhost:8080`);
+     ws.binaryType = "blob";
+     // Log socket opening and closing
+     ws.addEventListener("open", event => {
+         console.log("Websocket connection opened");
+         
+     });
+     ws.addEventListener("close", event => {
+         console.log("Websocket connection closed");
+     });
+     ws.onmessage = function (message) {
+       console.log('mensagem recebida do servidor', message);
+       let url = 'http://localhost:5500/tarefas.json';
+fetch(url)
+.then(res => res.json())
+.then(out =>
+{
+ console.log('Checkout this JSON! tarefas.html aberta pelo servidor', out)
+          //const msgDiv = document.createElement('div');
+          //msgDiv.classList.add('msgCtn');
+         // if (message.data instanceof Blob) {
+            //  reader = new FileReader();
+             // reader.onload = () => {
+              //    msgDiv.innerHTML = reader.result;
+              //    document.getElementById('messages').appendChild(msgDiv);
+             // };
+             // reader.readAsText(message.data);
+         // } else {
+            //  console.log("Result2: " + message.data);
+            //  msgDiv.innerHTML = message.data;
+             // document.getElementById('messages').appendChild(msgDiv);
+         // }
+         var listItem = document.createElement('li');
+    // var listItem cria o elemento li, que é uma linha de uma lista no html
+    var textSpan = document.createElement('span');
+    // span é usado pra agrupar elementos textuais em linha
+    var dateSpan = document.createElement('span');
+    var completeCheckbox = document.createElement('input');
+    // var completeCheckbox é criada como elemento de input
+    var deleteButton = document.createElement('button');
+    var editButton = document.createElement('button');
+    let taskList = document.getElementById('taskList');
+    var id = '';
+    taskList.innerHTML = "";
+    completedTaskList.innerHTML = "";
+
+
+    out.forEach((Doc) => {
+        // for (var i = 0; i < out.length; i ++) {
+//obj.push(out[i])
+console.log('obj ', out)
+
+var listItem = document.createElement('li');
+    // var listItem cria o elemento li, que é uma linha de uma lista no html
+    var textSpan = document.createElement('span');
+    var taskInputEdit = document.createElement('input');
+    taskInputEdit.type = 'text';
+      taskInputEdit.value = Doc.text;
+    // span é usado pra agrupar elementos textuais em linha
+    var dateSpan = document.createElement('span');
+
+    var dateInputEdit = document.createElement('input');
+    dateInputEdit.type = 'date';
+      dateInputEdit.value = moment(Doc.date ? ' - ' + new Date(Doc.date ).toLocaleDateString() : '', "DD/MM/YYYY");
+
+    
+
+    var completeCheckbox = document.createElement('input');
+    // var completeCheckbox é criada como elemento de input
+    var deleteButton = document.createElement('button');
+    var editButton = document.createElement('button');
+    var saveButton = document.createElement('button');
+    var cancelButton = document.createElement('button');
+    let taskList = document.getElementById('taskList');
+    var id = '';
+    var situacao = 'pendente';
+    textSpan.textContent = Doc.text;
+    //dateSpan.textContent = Doc.date ? ' - ' + new Date(Doc.date ).toLocaleDateString() : '';
+    dateSpan.textContent = Doc.date ? ' - ' +  new Date(Doc.date).toISOString().split('T')[0]: '';
+    
+    completeCheckbox.type = 'checkbox';
+    deleteButton.textContent = 'Excluir';
+    editButton.textContent = 'Editar';
+    saveButton.textContent = 'Salvar';
+    cancelButton.textContent = 'Cancelar';
+
+    listItem.appendChild(completeCheckbox);
+    listItem.appendChild(textSpan);
+    listItem.appendChild(dateSpan);
+    listItem.appendChild(taskInputEdit);
+    listItem.appendChild(dateInputEdit);
+    listItem.appendChild(deleteButton);
+    listItem.appendChild(editButton);
+    listItem.appendChild(cancelButton);
+    listItem.appendChild(saveButton);
+
+    if (Doc.situacao == 'pendente') {
+      taskList.appendChild(listItem);
+     } else {
+      completedTaskList.appendChild(listItem);
+     }
+     taskInputEdit.style.display = 'none';
+    dateInputEdit.style.display = 'none';
+    saveButton.style.display = 'none';
+    cancelButton.style.display = 'none'; 
+
+    taskInput.value = '';
+    dateInput.value = '';
+
+
+    editButton.onclick = function() {
+      console.log('entrei aqui edit inicial')
+     
+      
+
+     
+      dateInputEdit.type = 'date';
+      dateInputEdit.value = new Date(Doc.date).toISOString().slice(0, 10);
+     // dateInputEdit.textContent = Doc.date ? ' - ' + new Date(Doc.date ).toISOString().slice(0, 10): '';
+
+      //listItem.replaceChild(taskInputEdit, textSpan);
+      //listItem.replaceChild(dateInputEdit, dateSpan);
+      textSpan.style.display = 'none';
+      dateSpan.style.display = 'none';
+
+      editButton.style.display = 'none';
+      deleteButton.style.display = 'none';
+      taskInputEdit.style.display = 'inline';
+      dateInputEdit.style.display = 'inline';
+      
+      cancelButton.style.display = 'inline';
+      saveButton.style.display = 'inline';
+    
+    };
+
+    cancelButton.onclick = function() {
+      taskInputEdit.value = Doc.text;
+      textSpan.style.display = 'inline';
+      dateSpan.style.display = 'inline';
+
+      editButton.style.display = 'inline';
+      deleteButton.style.display = 'inline';
+      taskInputEdit.style.display = 'none';
+      dateInputEdit.style.display = 'none';
+      
+      cancelButton.style.display = 'none';
+      saveButton.style.display = 'none';
+    
+    /*  console.log('entrei no cancelar', Doc.date)
+      id = Doc._id;
+      dateInput = Doc.date;
+
+      fetch( '/atualizar' , {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+        "id": id, 
+        "taskInput": Doc.text, 
+        "dateInput": dateInput,
+        
+    })
+})
+   
+  
+  
+
+
+ 
+    .then(function(response) {
+      if(response.ok) {
+        console.log('Click função cancelar changes');
+        return;
+      }
+      throw new Error('Request failed função cancelar changes.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });*/
+
+    };
+    saveButton.onclick = function() {
+      console.log('entrei no savebuton', Doc.date)
+      id = Doc._id;
+
+      dateInput = Doc.date;
+
+      fetch( '/atualizar' , {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+        "id": id, 
+        "taskInput": taskInputEdit.value, 
+        "dateInput": dateInputEdit.value,
+        "situacao": Doc.situacao,
+        
+    })
+})
+   
+  
+  
+
+
+ 
+    .then(function(response) {
+      if(response.ok) {
+
+        sucessoModal.innerHTML = "";
+
+var sucessoModalText = document.createElement('p');
+sucessoModalText.textContent = "Tarefa atualizada com sucesso ";
+sucessoModal.appendChild(sucessoModalText);
+
+
+sucessoModal.showModal();
+ setTimeout(function () {
+  sucessoModal.close();
+}, 3000);
+
+        console.log('Click função cancelar changes');
+        return;
+      }
+      throw new Error('Request failed função cancelar changes.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+    }
+
+    completeCheckbox.onclick = function() {
+
+      if (completeCheckbox.checked) {
+          // Move tarefa para lista de concluídas
+     
+
+      console.log('entrei no complete box', Doc.date)
+      id = Doc._id;
+
+      dateInput = Doc.date;
+
+      fetch( '/situacao' , {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+        "id": id, 
+        "taskInput": Doc.text, 
+        "dateInput": Doc.date,
+        "situacao": 'completa',
+        
+    })
+})
+   
+  
+  
+
+
+ 
+    .then(function(response) {
+      if(response.ok) {
+
+        sucessoModal.innerHTML = "";
+
+var sucessoModalText = document.createElement('p');
+sucessoModalText.textContent = "Tarefa concluída com sucesso ";
+sucessoModal.appendChild(sucessoModalText);
+
+
+sucessoModal.showModal();
+ setTimeout(function () {
+  sucessoModal.close();
+}, 3000);
+
+        console.log('Click função cancelar changes');
+        return;
+      }
+      throw new Error('Request failed função cancelar changes.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+
+      
+    };
+
+    document.getElementById('toggleCompletedBtn').addEventListener('click', toggleCompletedTasks);
+    function toggleCompletedTasks() {
+      console.log('entrei nas tarefas concluidas changes');
+  var completedTasks = document.getElementById('completedTasks');
+  var toggleBtn = document.getElementById('toggleCompletedBtn');
+
+
+
+
+  if (situacao === 'pendente') {
+    situacao = 'completa';
+    completedTasks.style.display = 'grid';
+   
+    taskList.style.display = 'none';
+    toggleBtn.textContent = 'Ocultar Tarefas Concluídas';
+  } 
+  else if( situacao === 'completa')
+  {
+    console.log('tarefas concluidas ocultar changes')
+    situacao = 'pendente';
+    completedTasks.style.display = 'none';
+  taskList.style.display = 'flex';
+    toggleBtn.textContent = 'Mostrar Tarefas Concluídas';
+  }
+
+
+}
+
+
+
+
+
+
+
+    deleteButton.onclick = function() {
+      console.log('delete changes', Doc._id )
+      id = Doc._id;
+          modal.showModal();
+          //listItem.remove();
+        }
+    
+        document.getElementById('apagarBtn').addEventListener('click', async function() {
+       console.log('id apagar' + id);
+         // await deleteDoc(doc(db,'tarefas',  id));
+          modal.close();
+          
+        }
+
+        
+
+        
+    
+      
+        
+    );
+
+    
+    document.getElementById('apagarBtn').addEventListener('click', async function() {
+   
+   
+      console.log('id apagar' + id);
+      modal.close();
+     // await deleteDoc(doc(db,'tarefas',  id));
+     fetch( '/apagar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+        "id": id, 
+        
+    })
+})
+   
+  
+  
+
+
+ 
+    .then(function(response) {
+      if(response.ok) {
+
+        sucessoModal.innerHTML = "";
+
+        var sucessoModalText = document.createElement('p');
+        sucessoModalText.textContent = "Tarefa excluída com sucesso ";
+        sucessoModal.appendChild(sucessoModalText);
+        
+        
+        sucessoModal.showModal();
+         setTimeout(function () {
+          sucessoModal.close();
+        }, 3000);
+
+        console.log('Click was recorded');
+        return;
+      }
+      throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+      
+    }
+
+  
+    
+);
+
+
+
+    
+ }
+
+ //deleteButton.onclick = function() {
+ // console.log('delete changes', out[i]._id )
+ //var id = out[i]._id;
+     // modal.showModal();
+      //listItem.remove();
+    //};
+  
+
+
+ 
+  )
+
+
+
+}
+
+
+
+)
+.catch(err => console.log(err));
+
+
+
+      }
+        //const msgDiv = document.createElement('div');
+         //msgDiv.classList.add('msgCtn');
+        // if (message.data instanceof Blob) {
+           //  reader = new FileReader();
+            // reader.onload = () => {
+             //    msgDiv.innerHTML = reader.result;
+             //    document.getElementById('messages').appendChild(msgDiv);
+            // };
+            // reader.readAsText(message.data);
+        // } else {
+           //  console.log("Result2: " + message.data);
+           //  msgDiv.innerHTML = message.data;
+            // document.getElementById('messages').appendChild(msgDiv);
+        // }
+     
+     //const form = document.getElementById('msgForm');
+     //form.addEventListener('submit', (event) => {
+        // event.preventDefault();
+        // const message = document.getElementById('inputBox').value;
+       //  ws.send(message);
+       //  document.getElementById('inputBox').value = ''
+    // })
+ </script>
+
+
+  <script 
+  >
+  var listItem = document.createElement('li');
+  // var listItem cria o elemento li, que é uma linha de uma lista no html
+  var textSpan = document.createElement('span');
+  // span é usado pra agrupar elementos textuais em linha
+  var dateSpan = document.createElement('span');
+  var completeCheckbox = document.createElement('input');
+  // var completeCheckbox é criada como elemento de input
+  var deleteButton = document.createElement('button');
+  var editButton = document.createElement('button');
+  let taskList = document.getElementById('columnE');
+  var id = '';
+
+var obj = [];
+
+let url = 'http://localhost:5500/tarefas.json';
+fetch(url)
+.then(res => res.json())
+.then(out =>
+ //console.log('Checkout this JSON! tarefas.html', out))
+ {
+   console.log('out.length', out.length )
+
+   out.forEach((Doc) => {
+  //for (var i = 0; i < out.length; i ++) {
+//obj.push(out[i])
+console.log('obj ', out, Doc._id)
+
+
+var listItem = document.createElement('li');
+    // var listItem cria o elemento li, que é uma linha de uma lista no html
+    var textSpan = document.createElement('span');
+    var taskInputEdit = document.createElement('input');
+    taskInputEdit.type = 'text';
+      taskInputEdit.value = Doc.text;
+    // span é usado pra agrupar elementos textuais em linha
+    var dateSpan = document.createElement('span');
+
+    var dateInputEdit = document.createElement('input');
+    dateInputEdit.type = 'date';
+      dateInputEdit.textContent = Doc.date ? ' - ' + new Date(Doc.date ).toLocaleDateString() : '';
+
+    
+
+    var completeCheckbox = document.createElement('input');
+    // var completeCheckbox é criada como elemento de input
+    var deleteButton = document.createElement('button');
+    var editButton = document.createElement('button');
+    var saveButton = document.createElement('button');
+    var cancelButton = document.createElement('button');
+    let taskList = document.getElementById('taskList');
+    completedTasks.style.display = 'none';
+    taskList.style.display = 'true';
+    var id = '';
+    var situacao = 'pendente';
+
+
+   textSpan.textContent = Doc.text;
+   dateSpan.textContent = Doc.date ? ' - ' +  new Date(Doc.date).toISOString().split('T')[0]: '';
+    
+    completeCheckbox.type = 'checkbox';
+    deleteButton.textContent = 'Excluir';
+    editButton.textContent = 'Editar';
+    saveButton.textContent = 'Salvar';
+    cancelButton.textContent = 'Cancelar';
+
+  listItem.appendChild(completeCheckbox);
+    listItem.appendChild(textSpan);
+    listItem.appendChild(dateSpan);
+    listItem.appendChild(taskInputEdit);
+    listItem.appendChild(dateInputEdit);
+    listItem.appendChild(deleteButton);
+    listItem.appendChild(editButton);
+    listItem.appendChild(cancelButton);
+    listItem.appendChild(saveButton);
+
+   
+ 
+   
+    if (Doc.situacao == 'pendente') {
+      taskList.appendChild(listItem);
+     } else {
+      completedTaskList.appendChild(listItem);
+     }
+      taskInputEdit.style.display = 'none';
+      dateInputEdit.style.display = 'none';
+      saveButton.style.display = 'none';
+      cancelButton.style.display = 'none';
+  
+      taskInput.value = '';
+      dateInput.value = '';
+
+
+      editButton.onclick = function() {
+        console.log('entrei aqui edit inicial')
+       
+        
+  
+       
+        dateInputEdit.type = 'date';
+       // dateInputEdit.value = Doc.date ? ' - ' + new Date(Doc.date ).toLocaleDateString("dd-MM-yyyy") : '';
+  dateInputEdit.value = new Date(Doc.date).toISOString().slice(0, 10);
+        //listItem.replaceChild(taskInputEdit, textSpan);
+        //listItem.replaceChild(dateInputEdit, dateSpan);
+        textSpan.style.display = 'none';
+        dateSpan.style.display = 'none';
+  
+        editButton.style.display = 'none';
+        deleteButton.style.display = 'none';
+        taskInputEdit.style.display = 'inline';
+        dateInputEdit.style.display = 'inline';
+        
+        cancelButton.style.display = 'inline';
+        saveButton.style.display = 'inline';
+      
+      };
+  
+      cancelButton.onclick = function() {
+        taskInputEdit.value = Doc.text;
+        textSpan.style.display = 'inline';
+        dateSpan.style.display = 'inline';
+  
+        editButton.style.display = 'inline';
+        deleteButton.style.display = 'inline';
+        taskInputEdit.style.display = 'none';
+        dateInputEdit.style.display = 'none';
+        
+        cancelButton.style.display = 'none';
+        saveButton.style.display = 'none';
+      
+      /*  console.log('entrei no cancelar', Doc.date)
+        id = Doc._id;
+        dateInput = Doc.date;
+  
+        fetch( '/atualizar' , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({
+          "id": id, 
+          "taskInput": Doc.text, 
+          "dateInput": dateInput,
+          
+      })
+  })
+     
+    
+    
+  
+  
+   
+      .then(function(response) {
+        if(response.ok) {
+          console.log('Click função cancelar changes');
+          return;
+        }
+        throw new Error('Request failed função cancelar changes.');
+      })
+      .catch(function(error) {
+        console.log(error);
+      });*/
+  
+      };
+      saveButton.onclick = function() {
+        console.log('entrei no savebuton', Doc.date)
+        id = Doc._id;
+  
+        dateInput = Doc.date;
+  
+        fetch( '/atualizar' , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({
+          "id": id, 
+          "taskInput": taskInputEdit.value, 
+          "dateInput": dateInputEdit.value,
+          "situacao": Doc.situacao,
+          
+      })
+  })
+     
+    
+    
+  
+  
+   
+      .then(function(response) {
+        if(response.ok) {
+  
+          sucessoModal.innerHTML = "";
+  
+  var sucessoModalText = document.createElement('p');
+  sucessoModalText.textContent = "Tarefa atualizada com sucesso ";
+  sucessoModal.appendChild(sucessoModalText);
+  
+  
+  sucessoModal.showModal();
+   setTimeout(function () {
+    sucessoModal.close();
+  }, 3000);
+  
+          console.log('Click função cancelar changes');
+          return;
+        }
+        throw new Error('Request failed função cancelar changes.');
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+      }
+  
+  
+      completeCheckbox.onclick = function() {
+  
+  if (completeCheckbox.checked) {
+      // Move tarefa para lista de concluídas
+  
+  
+  console.log('entrei no complete box', Doc.date)
+  id = Doc._id;
+  
+  dateInput = Doc.date;
+  
+  fetch( '/situacao' , {
+  method: 'POST',
+  headers: {
+  'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    "id": id, 
+    "taskInput": Doc.text, 
+    "dateInput": Doc.date,
+    "situacao": 'completa',
+    
+  })
+  })
+  
+  
+  
+  
+  
+  
+  .then(function(response) {
+  if(response.ok) {
+  
+    sucessoModal.innerHTML = "";
+  
+  var sucessoModalText = document.createElement('p');
+  sucessoModalText.textContent = "Tarefa concluída com sucesso ";
+  sucessoModal.appendChild(sucessoModalText);
+  
+  
+  sucessoModal.showModal();
+   setTimeout(function () {
+    sucessoModal.close();
+  }, 3000);
+  
+    console.log('Click função cancelar changes');
+    return;
+  }
+  throw new Error('Request failed função cancelar changes.');
+  })
+  .catch(function(error) {
+  console.log(error);
+  });
+  }
+  
+  
+  };
+  
+  document.getElementById('toggleCompletedBtn').addEventListener('click', toggleCompletedTasks);
+      function toggleCompletedTasks() {
+        console.log('entrei nas tarefas concluidas inicial');
+    var completedTasks = document.getElementById('completedTasks');
+    var toggleBtn = document.getElementById('toggleCompletedBtn');
+  
+  console.log(completedTasks.style.display.value)
+  
+  
+  if (situacao === 'pendente') {
+      situacao = 'completa';
+      completedTasks.style.display = 'grid';
+      taskList.style.display = 'none';
+      toggleBtn.textContent = 'Ocultar Tarefas Concluídas';
+    } 
+    else if( situacao === 'completa')
+    {
+      console.log('tarefas concluidas ocultar changes')
+      situacao = 'pendente';
+      completedTasks.style.display = 'none';
+    taskList.style.display = 'grid';
+      toggleBtn.textContent = 'Mostrar Tarefas Concluídas';
+    }
+  }
+  
+// Função de editar tarefa
+
+   
+
+    deleteButton.onclick = function() {
+      modal.showModal();
+      console.log('delete inicial', Doc._id )
+     id = Doc._id;
+        
+          //listItem.remove();
+         // alert("modal delete inicial");
+        }
+    
+        document.getElementById('apagarBtn').addEventListener('click', async function() {
+       console.log('id apagar' + id);
+         // await deleteDoc(doc(db,'tarefas',  id));
+          modal.close();
+          
+        }
+    
+      
+        
+    );
+
+    
+    document.getElementById('apagarBtn').addEventListener('click', async function() {
+   
+   
+      console.log('id apagar' + id);
+      modal.close();
+     // await deleteDoc(doc(db,'tarefas',  id));
+     fetch( '/apagar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+        "id": id, 
+        
+    })
+})
+   
+  
+  
+
+
+ 
+    .then(function(response) {
+      if(response.ok) {
+
+        sucessoModal.innerHTML = "";
+
+var sucessoModalText = document.createElement('p');
+sucessoModalText.textContent = "Tarefa excluída com sucesso ";
+sucessoModal.appendChild(sucessoModalText);
+
+
+sucessoModal.showModal();
+ setTimeout(function () {
+  sucessoModal.close();
+}, 3000);
+        console.log('Click was recorded');
+        return;
+      }
+      throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+      
+    }
+
+  
+    
+);
+ }
+
+ //deleteButton.onclick = function() {
+ // console.log('delete changes', out[i]._id )
+ //var id = out[i]._id;
+     // modal.showModal();
+      //listItem.remove();
+    //};
+  
+
+
+ 
+  )
+
+
+
+}
+
+
+
+)
+.catch(err => console.log(err));
+
+
+
+//const __dirname = import('dirname');
+
+const button = document.getElementById('addTaskBtn');
+button.addEventListener('click', function() {
+  console.log('button was clicked tarefas.html');
+
+ // sendMessage();
+
+  fetch( '/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+        "taskInput": taskInput.value, 
+        "dateInput": dateInput.value,
+    })
+})
+   
+  
+  
+
+
+ 
+    .then(function(response) {
+      if(response.ok) {
+        console.log('Click was recorded');
+        return;
+      }
+      throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+});
+
+
+ </script>
+  
+  <footer class="rodape">
+    <p>
+      <a class="btn btn-primary" href="/" rel="prev">Voltar</a>
+    </p>
+  </footer>
+</body>
+
+</html>
